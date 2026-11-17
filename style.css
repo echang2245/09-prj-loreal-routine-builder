@@ -229,18 +229,47 @@ h1 span {
   border-color: rgba(255, 255, 255, 0.08);
 }
 
-.gold-disc {
-  width: 180px;
-  height: 180px;
-  background: linear-gradient(
-    140deg,
-    #f6dc99,
-    var(--gold) 70%,
-    #bd8221
-  );
-  border-radius: 50%;
-  position: absolute;
+.brand-banner {
+  width: 250px;
+  min-height: 150px;
+  padding: 25px 28px;
+  background: #fff;
+  border: 1px solid rgba(255, 255, 255, 0.7);
+  border-radius: 18px;
   box-shadow: 15px 14px 55px rgba(227, 165, 53, 0.18);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 17px;
+  position: absolute;
+  transform: rotate(-2deg);
+}
+
+.brand-banner img {
+  width: 108px;
+  height: auto;
+  object-fit: contain;
+}
+
+.brand-banner div {
+  display: flex;
+  align-items: baseline;
+  gap: 7px;
+  padding-top: 12px;
+  border-top: 1px solid #d7d0c6;
+  color: var(--ink);
+  letter-spacing: 0.11em;
+}
+
+.brand-banner span {
+  color: var(--red);
+  font-size: 9px;
+  font-weight: 800;
+}
+
+.brand-banner strong {
+  font-family: Montserrat, sans-serif;
+  font-size: 10px;
 }
 
 .orbit-caption {
