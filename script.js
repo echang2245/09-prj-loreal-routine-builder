@@ -7,7 +7,6 @@ const WORKER_URL = "https://smart-product-advisor.echang2245.workers.dev/";
 
 // LocalStorage keys
 const STORAGE_KEY = "loreal-selected-products";
-const RTL_KEY = "loreal-rtl";
 
 // DOM elements
 const categoryFilter = document.getElementById("categoryFilter");
@@ -23,7 +22,6 @@ const userInput = document.getElementById("userInput");
 const sendBtn = document.getElementById("sendBtn");
 const webSearchToggle = document.getElementById("webSearchToggle");
 const appStatus = document.getElementById("appStatus");
-const dirToggle = document.getElementById("dirToggle");
 
 // Application state
 let allProducts = [];
@@ -714,36 +712,6 @@ categoryFilter.addEventListener("change", () => {
 productSearch.addEventListener("input", () => {
   displayProducts();
 });
-
-/* ==========================================
-   RIGHT-TO-LEFT LANGUAGE SUPPORT
-   ========================================== */
-
-dirToggle.addEventListener("click", () => {
-  const isRTL = document.documentElement.dir !== "rtl";
-
-  document.documentElement.dir = isRTL ? "rtl" : "ltr";
-
-  dirToggle.textContent = isRTL ? "LTR layout" : "RTL layout";
-
-  dirToggle.setAttribute("aria-pressed", String(isRTL));
-
-  localStorage.setItem(RTL_KEY, JSON.stringify(isRTL));
-});
-
-// Restore RTL preference
-try {
-  const savedRTL = JSON.parse(localStorage.getItem(RTL_KEY) || "false");
-
-  if (savedRTL) {
-    document.documentElement.dir = "rtl";
-
-    dirToggle.textContent = "LTR layout";
-    dirToggle.setAttribute("aria-pressed", "true");
-  }
-} catch (error) {
-  console.error("RTL preference could not be loaded.");
-}
 
 /* ==========================================
    INITIALIZE APPLICATION
