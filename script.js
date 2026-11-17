@@ -383,6 +383,39 @@ function formatProducts(products) {
   }));
 }
 
+// Read text from both OpenAI and simple Worker response formats.
+function extractReply(data) {
+  const directReply =
+    data.reply ||
+    data.response ||
+    data.answer ||
+    data.output_text ||
+    data.message?.content ||
+    data.choices?.[0]?.message?.content;
+
+  if (typeof directReply === "string") {
+    return directReply;
+  }
+
+  if (Array.isArray(directReply)) {
+    return directReply
+      .map((part) => (typeof part === "string" ? part : part.text))
+      .filter(Boolean)
+      .join("\n\n");
+  }
+
+  if (Array.isArray(data.output)) {
+    return data.output
+      .filter((item) => item.type === "message")
+      .flatMap((item) => item.content || [])
+      .map((part) => (typeof part === "string" ? part : part.text))
+      .filter(Boolean)
+      .join("\n\n");
+  }
+
+  return "";
+}
+
 /* ==========================================
    DISPLAY CHAT MESSAGES
    ========================================== */
@@ -508,19 +541,7 @@ Do not invent additional selected products.
   }
 
   // Support common Worker response formats
-  const reply =
-    data.reply ||
-    data.response ||
-    data.answer ||
-    data.message?.content ||
-    data.choices?.[0]?.message?.content ||
-    data.output_text ||
-    data.output
-      ?.filter((item) => item.type === "message")
-      .flatMap((item) => item.content || [])
-      .filter((part) => part.type === "output_text")
-      .map((part) => part.text)
-      .join("\n\n");
+  const reply = extractReply(data);
 
   if (!reply || typeof reply !== "string") {
     throw new Error(
@@ -665,9 +686,21 @@ chatForm.addEventListener("submit", (event) => {
     return;
   }
 
+  const chatProducts =
+    routineProducts.length > 0 ? routineProducts : getSelectedProducts();
+
+  if (chatProducts.length === 0) {
+    setStatus("Please select at least one product before chatting.", true);
+    addChatMessage(
+      "assistant",
+      "Choose at least one product above, then ask me about it.",
+    );
+    return;
+  }
+
   userInput.value = "";
 
-  processAIRequest(message, "chat", routineProducts);
+  processAIRequest(message, "chat", chatProducts);
 });
 
 /* ==========================================
